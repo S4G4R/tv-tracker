@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block body %}
+<section id="loginform" class="outer-wrapper">
+
+    <div class="inner-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-4">
+                    <h2 class="text-center">Register here.</h2>
+                    <form role="form">
+                        <div class="form-group">
+                            {{ form.username.label }}
+                            {{ form.username(class_="form-control", placeholder="Enter username") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.password.label }}
+                            {{ form.username(class_="form-control", placeholder="Enter password", type="password") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.password.label }}
+                            {{ form.username(class_="form-control", placeholder="Confirm password", type="password") }}
+                        </div>
+                        {{ form.submit(class_="btn btn-default") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}
