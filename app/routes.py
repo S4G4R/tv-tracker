@@ -7,24 +7,22 @@ from app.forms import LoginForm, RegisterForm
 def index():
     return render_template('index.html')
 
-@app.route('/login', methods =['GET', 'POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
 
-    if request.method == "POST":
-        # TODO
-        return redirect('/')
+    form = LoginForm()
 
-    if request.method == "GET":
-        form = LoginForm()
-        return render_template('login.html', form=form)
+    if form.validate_on_submit():
+        return redirect('/index')
 
-@app.route('/register')
+    return render_template('login.html', form=form)
+
+@app.route('/register', methods=['GET','POST'])
 def register():
 
-    if request.method == "POST":
-        # TODO
-        return redirect('/')
+    form = RegisterForm()
 
-    if request.method == "GET":
-        form = RegisterForm()
-        return render_template('register.html', form=form)
+    if form.validate_on_submit():
+        return redirect('/index')
+
+    return render_template('register.html', form=form)
