@@ -12,20 +12,29 @@ Login
             <div class="row">
                 <div class="col-sm-4 col-sm-offset-4">
                     <h2 class="text-center">Register here.</h2>
-                    <form role="form">
+                    <form role="form" method="post">
+                        {{ form.csrf_token }}
                         <div class="form-group">
                             {{ form.username.label }}
                             {{ form.username(class_="form-control", placeholder="Enter username") }}
                         </div>
                         <div class="form-group">
                             {{ form.password.label }}
-                            {{ form.username(class_="form-control", placeholder="Enter password", type="password") }}
+                            {{ form.password(class_="form-control", placeholder="Enter password", type="password") }}
                         </div>
                         <div class="form-group">
                             {{ form.repeatedPassword.label }}
-                            {{ form.username(class_="form-control", placeholder="Confirm password", type="password") }}
+                            {{ form.repeatedPassword(class_="form-control", placeholder="Confirm password", type="password") }}
                         </div>
                         {{ form.submit(class_="btn btn-default") }}
+                        {% if form.errors %}
+                        <ul class=errors>
+                            {% for error in form.repeatedPassword.errors %}
+                            <br>
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </form>
                 </div>
             </div>
