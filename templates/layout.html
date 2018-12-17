@@ -16,11 +16,12 @@
 
     /* Add a gray background color and some padding to the footer */
     footer {
-        background-color: #f2f2f2;
+        background-color: #222222;
         padding: 25px;
         bottom: 0;
         width: 100%;
         position: fixed;
+        color: white;
     }
     </style>
 </head>
@@ -30,8 +31,8 @@
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li><a>TV Shows Tracker</a></li>
-                    <li class="active"><a href="/">Home</a></li>
+                    <li class="active"><a>TV Shows Tracker</a></li>
+                    <li><a href="/">Home</a></li>
                     {% if current_user.is_authenticated or current_user.is_active %}
                     <li><a href="#">Search</a></li>
                     <li><a href="#">Your TV-Shows</a></li>
@@ -39,9 +40,9 @@
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_authenticated or current_user.is_active %}
+                    {% if current_user.is_authenticated %}
                         <li><a href="#">Your Account</a></li>
-                        <li><a href="#">Logout</a></li>
+                        <li><a href="/logout">Logout</a></li>
                     {% else %}
                         <li><a href="/login">Login</a></li>
                         <li><a href="/register">Register</a></li>
@@ -64,11 +65,7 @@
     {% block body %} {% endblock %}
 
     <footer class="container-fluid text-center">
-        <p>To edit</p>
-        <form class="form-inline">
-            <input type="email" class="form-control" size="50" placeholder="To be used later">
-            <button type="button" class="btn btn-danger">Null</button>
-        </form>
+        <p>To add things later...</p>
     </footer>
 
 </body>
