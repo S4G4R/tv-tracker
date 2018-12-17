@@ -26,12 +26,12 @@ db.create_all()
 # TODO Set up database migration
 # < ---------------------------------- > #
 
-from app.routes import app_routing
-app.register_blueprint(app_routing)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 # < ---------------------------------- > #
 
-login_manager = LoginManager()
-login_manager.init_app(app)
+from app.routes import app_routing
+app.register_blueprint(app_routing)
 
 # < ---------------------------------- > #
