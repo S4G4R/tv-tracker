@@ -1,5 +1,8 @@
 from flask import render_template, request, redirect, Blueprint, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, RegisterForm
+from app.models import User
+from tv import db
 
 app_routing = Blueprint('app_routing',__name__)
 
@@ -29,7 +32,18 @@ def register():
 
     if form.validate_on_submit():
 
-        # TODO REGISTER LOGIC
+        username = form.username.data
+        pw_hash = generate_password_hash(form.password.data)
+
+        username_present = User.query.filter_by(username=username).first()
+
+        if username_present:
+            flash('Username already registered!')
+            return redirect('/index')
+
+        new_user = User(username=username, pw_hash=pw_hash)
+        db.session.add(new_user)
+        db.session.commit()
 
         flash('Registered successfully!')
         return redirect('/index')
