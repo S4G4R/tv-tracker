@@ -94,3 +94,11 @@ def register():
         return redirect('/index')
 
     return render_template('register.html', form=form)
+
+@app_routing.route('/myaccount', methods=['GET'])
+@login_required
+def myaccount():
+
+    username = current_user.username
+
+    return render_template('account.html', username=username)
