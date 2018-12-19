@@ -1,6 +1,6 @@
 from flask import render_template, redirect, Blueprint, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, SearchForm
 from app.models import User
 from flask_login import login_user, logout_user, login_required, current_user
 from tv import db, login_manager
@@ -102,3 +102,17 @@ def myaccount():
     username = current_user.username
 
     return render_template('account.html', username=username)
+
+@app_routing.route('/search', methods=['GET','POST'])
+@login_required
+def search():
+
+    form = SearchForm()
+
+    if form.validate_on_submit():
+
+        # TODO:
+
+        return redirect('/index')
+
+    return render_template('search.html', form=form)
