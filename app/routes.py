@@ -19,6 +19,9 @@ def load_user(id):
 @app_routing.route('/login', methods=['GET','POST'])
 def login():
 
+    if current_user.is_authenticated:
+        return redirect('/index')
+
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -29,22 +32,20 @@ def login():
 
         if not username_present:
             flash('Incorrect password or username!', 'error')
-            return redirect('/index')
-
-        current_user = username_present
+            return redirect('/login')
 
         password = form.password.data
         pw_hash = username_present.pw_hash
 
         if not check_password_hash(pw_hash, password):
             flash('Incorrect password or username!', 'error')
-            return redirect('/index')
+            return redirect('/login')
 
-        current_user.authenticated = True
-        db.session.add(current_user)
+        username_present.authenticated = True
+        db.session.add(username_present)
         db.session.commit()
 
-        login_user(current_user, remember=True)
+        login_user(username_present, remember=True)
 
         flash('Logged in successfully!', 'success')
         return redirect('/index')
@@ -69,6 +70,9 @@ def logout():
 @app_routing.route('/register', methods=['GET','POST'])
 def register():
 
+    if current_user.is_authenticated:
+        return redirect('/index')
+
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -80,7 +84,7 @@ def register():
 
         if username_present:
             flash('Username already registered!', 'error')
-            return redirect('/index')
+            return redirect('/register')
 
         new_user = User(username=username, pw_hash=pw_hash)
         db.session.add(new_user)
