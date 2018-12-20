@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Search Results
+{% endblock %}
+
+{% block body %}
+
+<div class="inner-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+                <h2 class="text-center fixed-top">Search Results</h2>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="inner-wrapper scrollable well">
+    {% for result in results %}
+    <div class="panel panel-default">
+        {% if type == 'tv' %}
+            <div class="panel-heading"><b>{{ result.name }}</b></div>
+        {% else %}
+            <div class="panel-heading"><b>{{ result.title }}</b></div>
+        {% endif %}
+        <div class="panel-body">{{ result.overview }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
