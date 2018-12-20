@@ -2,6 +2,7 @@ from flask import render_template, redirect, Blueprint, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, RegisterForm, SearchForm
 from app.models import User
+from app.search import search_movie, search_tv
 from flask_login import login_user, logout_user, login_required, current_user
 from tv import db, login_manager
 
@@ -112,7 +113,11 @@ def search():
     if form.validate_on_submit():
 
         # TODO:
+        if form.type.data == 'tv':
+            results = search_tv(form.title.data)
+        else :
+            results = search_movie(form.title.data)
 
-        return redirect('/index')
+        return render_template('results.html',results=results,type=form.type.data)
 
     return render_template('search.html', form=form)
