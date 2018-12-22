@@ -21,9 +21,33 @@ Search Results
     {% for result in results %}
     <div class="panel panel-default">
         {% if type == 'tv' %}
-            <div class="panel-heading"><b>{{ result.name }}</b></div>
+        <div class="panel-heading" style="overflow:hidden; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <b>{{ result.name }}</b>
+            </div>
+            <div>
+                <form role="form" method="post" action="/quickadd">
+                    {{ form.csrf_token }}
+                    {{ form.id(value=result.id) }}
+                    {{ form.type(value=type) }}
+                    {{ form.submit(class_="btn btn-primary btn-sm") }}
+                </form>
+            </div>
+        </div>
         {% else %}
-            <div class="panel-heading"><b>{{ result.title }}</b></div>
+        <div class="panel-heading" style="overflow:hidden; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <b>{{ result.title }}</b>
+            </div>
+            <div>
+                <form role="form" method="post" action="/quickadd">
+                    {{ form.csrf_token }}
+                    {{ form.id(value=result.id) }}
+                    {{ form.type(value=type) }}
+                    {{ form.submit(class_="btn btn-primary btn-sm") }}
+                </form>
+            </div>
+        </div>
         {% endif %}
         <div class="panel-body">{{ result.overview }}</div>
     </div>

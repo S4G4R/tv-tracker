@@ -1,6 +1,6 @@
-from flask import render_template, redirect, Blueprint, flash
+from flask import render_template, redirect, Blueprint, flash, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, RegisterForm, SearchForm
+from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm
 from app.models import User
 from app.search import search_movie, search_tv
 from flask_login import login_user, logout_user, login_required, current_user
@@ -112,12 +112,26 @@ def search():
 
     if form.validate_on_submit():
 
-        # TODO:
-        if form.type.data == 'tv':
-            results = search_tv(form.title.data)
-        else :
-            results = search_movie(form.title.data)
+        form_title = form.title.data
+        form_type = form.type.data
 
-        return render_template('results.html',results=results,type=form.type.data)
+        if form_type == 'tv':
+            results = search_tv(form_title)
+        else :
+            results = search_movie(form_title)
+
+        form = QuickAddForm()
+        return render_template('results.html',results=results,type=form_type,form=form)
 
     return render_template('search.html', form=form)
+
+@app_routing.route('/quickadd', methods=['GET','POST'])
+@login_required
+def quickadd():
+
+    id = request.form.get('id')
+    type = request.form.get('type')
+
+    # TODO INSERT INTO DATABASE LOGIC
+
+    return redirect('/index')

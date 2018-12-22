@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, HiddenField
 from wtforms.validators import DataRequired, EqualTo, NumberRange
 
 class LoginForm(FlaskForm):
@@ -22,3 +22,8 @@ class SearchForm(FlaskForm):
     ])
     title = StringField('Title Of TV Show/Movie', validators=[DataRequired()])
     submit = SubmitField('Search')
+
+class QuickAddForm(FlaskForm):
+    id = HiddenField('', validators=[DataRequired()])
+    type = HiddenField('', validators=[DataRequired()])
+    submit = SubmitField('+ Quick Add')
