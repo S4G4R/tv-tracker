@@ -125,7 +125,7 @@ def search():
 
     return render_template('search.html', form=form)
 
-@app_routing.route('/quickadd', methods=['GET','POST'])
+@app_routing.route('/quickadd', methods=['POST'])
 @login_required
 def quickadd():
 
