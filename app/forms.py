@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, HiddenField, IntegerField
 from wtforms.validators import DataRequired, EqualTo, NumberRange
 
 class LoginForm(FlaskForm):
@@ -27,3 +27,13 @@ class QuickAddForm(FlaskForm):
     id = HiddenField('', validators=[DataRequired()])
     type = HiddenField('', validators=[DataRequired()])
     submit = SubmitField('+ Quick Add')
+
+class UpdateSeason(FlaskForm):
+    show_id = HiddenField('', validators=[DataRequired()])
+    season = IntegerField('Episodes')
+    submit1 = SubmitField('⟳')
+
+class AddEpisodes(FlaskForm):
+    show_id = HiddenField('', validators=[DataRequired()])
+    eps_watched = IntegerField('Episodes')
+    submit2 = SubmitField('⟳')
