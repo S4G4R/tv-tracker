@@ -1,8 +1,8 @@
 from flask import render_template, redirect, Blueprint, flash, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm
-from app.models import User
-from app.search import search_movie, search_tv
+from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, AddEpisodes, UpdateSeason
+from app.models import User, Show
+from app.search import search_movie, search_tv, search_by_id
 from flask_login import login_user, logout_user, login_required, current_user
 from tv import db, login_manager
 
@@ -132,6 +132,61 @@ def quickadd():
     id = request.form.get('id')
     type = request.form.get('type')
 
-    # TODO INSERT INTO DATABASE LOGIC
+    result = search_by_id(id, type)
+
+    if type == 'tv':
+        show_present = Show.query.filter_by(show_id=id).first()
+
+        if show_present:
+            flash('Show already in your list!', 'error')
+            return redirect('/index')
+
+        new_show = Show(
+            show_id = result['id'],
+            show_name = result['name'],
+            user_id = current_user.id
+        )
+
+        db.session.add(new_show)
+        db.session.commit()
+
+        flash('Added show successfully!', 'success')
 
     return redirect('/index')
+
+@app_routing.route('/shows', methods=['GET','POST'])
+@login_required
+def shows():
+
+    shows = Show.query.filter_by(user_id=current_user.id).all()
+
+    seasonform = UpdateSeason()
+    episodeform = AddEpisodes()
+
+    if seasonform.submit1.data and seasonform.validate_on_submit():
+        id = seasonform.show_id.data
+        season = seasonform.season.data
+
+        show = db.session.query(Show).filter_by(show_id=id).first()
+
+        show.curr_season = season
+
+        db.session.commit()
+
+        flash('Updated successfully!', 'success')
+        return redirect('/shows')
+
+    if episodeform.submit2.data and episodeform.validate_on_submit():
+        id = episodeform.show_id.data
+        eps = episodeform.eps_watched.data
+
+        show = db.session.query(Show).filter_by(show_id=id).first()
+
+        show.eps_watched = eps
+
+        db.session.commit()
+
+        flash('Updated successfully!', 'success')
+        return redirect('/shows')
+
+    return render_template('shows.html', shows=shows, episodeform=episodeform, seasonform=seasonform)
