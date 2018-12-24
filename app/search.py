@@ -23,4 +23,4 @@ def search_by_id(id, type):
     else :
         result = tmdb.Movies(id)
 
-    return result
+    return result.info()
