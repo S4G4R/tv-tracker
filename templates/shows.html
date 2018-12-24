@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+My TV-Shows
+{% endblock %}
+
+{% block body %}
+<div class="inner-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+                <h2 class="text-center fixed-top">Your TV Shows</h2>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if shows %}
+<div class="inner-wrapper scrollable well">
+
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Show Name</th>
+                <th class="text-center" scope="col">Current Season</th>
+                <th class="text-center" scope="col">Episode Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for show in shows %}
+            <tr>
+                <td>{{ show.show_name }}</td>
+                <td>
+                    <form role="form" method="post">
+                        {{ seasonform.csrf_token }}
+                        {{ seasonform.show_id(value=show.show_id) }}
+                        {{ seasonform.season(value=show.curr_season, style="text-align:center;") }}
+                        {{ seasonform.submit1(class_="btn btn-primary btn-sm") }}
+                    </form>
+                </td>
+                <td>
+                    <form role="form" method="post">
+                        {{ episodeform.csrf_token }}
+                        {{ episodeform.show_id(value=show.show_id) }}
+                        {{ episodeform.eps_watched(value=show.eps_watched, style="text-align:center;")  }}
+                        {{ episodeform.submit2(class_="btn btn-primary btn-sm") }}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-danger col-md-4 col-md-offset-4 text-center" align="center" role="alert">
+    <strong>No shows to display!</strong>
+</div>
+{% endif %}
+{% endblock %}
