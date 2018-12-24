@@ -24,13 +24,14 @@ class User(db.Model):
         return '<User %r>' % self.username
 
 class Movie(db.Model):
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=False)
-    overview = db.Column(db.String(1000))
+    movie_name = db.Column(db.String(80), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Show(db.Model):
+    show_id = db.Column(db.Integer, primary_key=True)
+    show_name = db.Column(db.String(80), nullable=False)
+    curr_season = db.Column(db.Integer, default=1)
+    eps_watched = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    overview = db.Column(db.String(1000))
