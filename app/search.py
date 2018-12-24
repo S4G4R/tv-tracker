@@ -15,3 +15,12 @@ def search_tv(title):
     response = search.tv(query=title)
 
     return search.results
+
+def search_by_id(id, type):
+
+    if type == 'tv':
+        result = tmdb.TV(id)
+    else :
+        result = tmdb.Movies(id)
+
+    return result
