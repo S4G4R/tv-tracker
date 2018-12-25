@@ -22,8 +22,6 @@ migrate = Migrate(app, db)
 from app import models
 
 db.create_all()
-
-# TODO Set up database migration
 # < ---------------------------------- > #
 
 login_manager = LoginManager()
