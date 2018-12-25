@@ -25,6 +25,7 @@ My TV-Shows
                 <th class="text-center" scope="col">Show Name</th>
                 <th class="text-center" scope="col">Current Season</th>
                 <th class="text-center" scope="col">Episode Number</th>
+                <th class="text-center" scope="col">Remove Show</th>
             </tr>
         </thead>
         <tbody>
@@ -45,6 +46,13 @@ My TV-Shows
                         {{ episodeform.show_id(value=show.show_id) }}
                         {{ episodeform.eps_watched(value=show.eps_watched, style="text-align:center;")  }}
                         {{ episodeform.submit2(class_="btn btn-primary btn-sm") }}
+                    </form>
+                </td>
+                <td>
+                    <form role="form" action="/remove" method="post">
+                        {{ removal.id(value=show.show_id) }}
+                        {{ removal.type(value='tv') }}
+                        {{ removal.submit(class_="btn btn-danger btn-sm") }}
                     </form>
                 </td>
             </tr>

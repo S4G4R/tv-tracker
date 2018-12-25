@@ -26,6 +26,7 @@ My Movies
                 <th class="text-center" scope="col">Status</th>
                 <th class="text-center" scope="col">Update Status</th>
                 <th class="text-center" scope="col">Rating (0 - 100)</th>
+                <th class="text-center" scope="col">Remove Movie</th>
             </tr>
         </thead>
         <tbody>
@@ -47,6 +48,13 @@ My Movies
                         {{ changerating.movie_id(value=movie.movie_id) }}
                         {{ changerating.rating(value=movie.rating, style="text-align:center;")  }}
                         {{ changerating.submit2(class_="btn btn-primary btn-sm") }}
+                    </form>
+                </td>
+                <td>
+                    <form role="form" action="/remove" method="post">
+                        {{ removal.id(value=movie.movie_id) }}
+                        {{ removal.type(value='movie') }}
+                        {{ removal.submit(class_="btn btn-danger btn-sm") }}
                     </form>
                 </td>
             </tr>

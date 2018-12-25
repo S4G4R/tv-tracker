@@ -56,3 +56,8 @@ class PasswordChangeForm(FlaskForm):
         EqualTo('new_pw', message='Passwords do not match!')
     ])
     submit = SubmitField('Change Password')
+
+class RemovalForm(FlaskForm):
+    id = HiddenField('', validators=[DataRequired()])
+    type = HiddenField('', validators=[DataRequired()])
+    submit = SubmitField('X')

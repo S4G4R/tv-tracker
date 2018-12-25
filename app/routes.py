@@ -1,6 +1,6 @@
 from flask import render_template, redirect, Blueprint, flash, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, AddEpisodes, UpdateSeason, ChangeStatus, ChangeRating, PasswordChangeForm
+from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, AddEpisodes, UpdateSeason, ChangeStatus, ChangeRating, PasswordChangeForm, RemovalForm
 from app.models import User, Show, Movie
 from app.search import search_movie, search_tv, search_by_id
 from flask_login import login_user, logout_user, login_required, current_user
@@ -180,6 +180,7 @@ def shows():
 
     seasonform = UpdateSeason()
     episodeform = AddEpisodes()
+    removal = RemovalForm()
 
     if seasonform.submit1.data and seasonform.validate_on_submit():
         id = seasonform.show_id.data
@@ -207,7 +208,7 @@ def shows():
         flash('Updated successfully!', 'success')
         return redirect('/shows')
 
-    return render_template('shows.html', shows=shows, episodeform=episodeform, seasonform=seasonform)
+    return render_template('shows.html', shows=shows, episodeform=episodeform, seasonform=seasonform, removal=removal)
 
 @app_routing.route('/movies', methods=['GET','POST'])
 @login_required
@@ -217,6 +218,7 @@ def movies():
 
     changestatus = ChangeStatus()
     changerating = ChangeRating()
+    removal = RemovalForm()
 
     if changestatus.submit1.data and changestatus.validate_on_submit():
         id = changestatus.movie_id.data
@@ -244,7 +246,7 @@ def movies():
         flash('Updated successfully!', 'success')
         return redirect('/movies')
 
-    return render_template('movies.html', movies=movies, changestatus=changestatus, changerating=changerating)
+    return render_template('movies.html', movies=movies, changestatus=changestatus, changerating=changerating, removal=removal)
 
 @app_routing.route('/changepassword', methods=['GET','POST'])
 @login_required
@@ -273,3 +275,25 @@ def changepassword():
         return redirect('/myaccount')
 
     return render_template('change_password.html', form=form)
+
+@app_routing.route('/remove', methods=['POST'])
+@login_required
+def remove():
+
+    id = request.form.get('id')
+    type = request.form.get('type')
+
+    if type == 'tv':
+        result = db.session.query(Show).filter_by(show_id=id).first()
+    else :
+        result = db.session.query(Movie).filter_by(movie_id=id).first()
+
+    db.session.delete(result)
+    db.session.commit()
+
+    if type == 'tv':
+        flash('Show deleted successfully!', 'success')
+        return redirect('/shows')
+    else :
+        flash('Movie deleted successfully!', 'success')
+        return redirect('/movies')
