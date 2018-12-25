@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+My Movies
+{% endblock %}
+
+{% block body %}
+<div class="inner-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+                <h2 class="text-center fixed-top">Your Movies</h2>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if movies %}
+<div class="inner-wrapper scrollable well">
+
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Movie Title</th>
+                <th class="text-center" scope="col">Status</th>
+                <th class="text-center" scope="col">Update Status</th>
+                <th class="text-center" scope="col">Rating (0 - 100)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movie in movies %}
+            <tr>
+                <td>{{ movie.movie_name }}</td>
+                <td>{{ movie.status }}</td>
+                <td>
+                    <form role="form" method="post">
+                        {{ changestatus.csrf_token }}
+                        {{ changestatus.movie_id(value=movie.movie_id) }}
+                        {{ changestatus.status(value=movie.status, style="text-align:center;")  }}
+                        {{ changestatus.submit1(class_="btn btn-primary btn-sm") }}
+                    </form>
+                </td>
+                <td>
+                    <form role="form" method="post">
+                        {{ changerating.csrf_token }}
+                        {{ changerating.movie_id(value=movie.movie_id) }}
+                        {{ changerating.rating(value=movie.rating, style="text-align:center;")  }}
+                        {{ changerating.submit2(class_="btn btn-primary btn-sm") }}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% if changerating.errors %}
+        <ul class=errors>
+            {% for error in changerating.rating.errors %}
+            <br>
+            <li><b>{{ error }}</b></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </table>
+</div>
+{% else %}
+<div class="alert alert-danger col-md-4 col-md-offset-4 text-center" align="center" role="alert">
+    <strong>No movies to display!</strong>
+</div>
+{% endif %}
+{% endblock %}

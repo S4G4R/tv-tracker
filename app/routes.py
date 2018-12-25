@@ -1,7 +1,7 @@
 from flask import render_template, redirect, Blueprint, flash, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, AddEpisodes, UpdateSeason
-from app.models import User, Show
+from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, AddEpisodes, UpdateSeason, ChangeStatus, ChangeRating
+from app.models import User, Show, Movie
 from app.search import search_movie, search_tv, search_by_id
 from flask_login import login_user, logout_user, login_required, current_user
 from tv import db, login_manager
@@ -152,6 +152,24 @@ def quickadd():
 
         flash('Added show successfully!', 'success')
 
+    else :
+        movie_present = Movie.query.filter_by(movie_id=id).first()
+
+        if movie_present:
+            flash('Movie already in your list!', 'error')
+            return redirect('/index')
+
+        new_movie = Movie(
+            movie_id = result['id'],
+            movie_name = result['title'],
+            user_id = current_user.id
+        )
+
+        db.session.add(new_movie)
+        db.session.commit()
+
+        flash('Added movie successfully!', 'success')
+
     return redirect('/index')
 
 @app_routing.route('/shows', methods=['GET','POST'])
@@ -190,3 +208,40 @@ def shows():
         return redirect('/shows')
 
     return render_template('shows.html', shows=shows, episodeform=episodeform, seasonform=seasonform)
+
+@app_routing.route('/movies', methods=['GET','POST'])
+@login_required
+def movies():
+
+    movies = Movie.query.filter_by(user_id=current_user.id).all()
+
+    changestatus = ChangeStatus()
+    changerating = ChangeRating()
+
+    if changestatus.submit1.data and changestatus.validate_on_submit():
+        id = changestatus.movie_id.data
+        status = changestatus.status.data
+
+        movie = db.session.query(Movie).filter_by(movie_id=id).first()
+
+        movie.status = status
+
+        db.session.commit()
+
+        flash('Updated successfully!', 'success')
+        return redirect('/movies')
+
+    if changerating.submit2.data and changerating.validate_on_submit():
+        id = changerating.movie_id.data
+        rating = changerating.rating.data
+
+        movie = db.session.query(Movie).filter_by(movie_id=id).first()
+
+        movie.rating = rating
+
+        db.session.commit()
+
+        flash('Updated successfully!', 'success')
+        return redirect('/movies')
+
+    return render_template('movies.html', movies=movies, changestatus=changestatus, changerating=changerating)
