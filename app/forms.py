@@ -37,3 +37,13 @@ class AddEpisodes(FlaskForm):
     show_id = HiddenField('', validators=[DataRequired()])
     eps_watched = IntegerField('Episodes')
     submit2 = SubmitField('⟳')
+
+class ChangeStatus(FlaskForm):
+    movie_id = HiddenField('', validators=[DataRequired()])
+    status = SelectField('Change Status', choices=[('Watched', 'Watched'), ('Not Watched', 'Not Watched')])
+    submit1 = SubmitField('⟳')
+
+class ChangeRating(FlaskForm):
+    movie_id = HiddenField('', validators=[DataRequired()])
+    rating = IntegerField('Rating', validators=[NumberRange(min=0,max=100,message='Enter rating between 0 and 100!')])
+    submit2 = SubmitField('⟳')
