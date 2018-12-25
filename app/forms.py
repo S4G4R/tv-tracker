@@ -47,3 +47,12 @@ class ChangeRating(FlaskForm):
     movie_id = HiddenField('', validators=[DataRequired()])
     rating = IntegerField('Rating', validators=[NumberRange(min=0,max=100,message='Enter rating between 0 and 100!')])
     submit2 = SubmitField('⟳')
+
+class PasswordChangeForm(FlaskForm):
+    old_pw = PasswordField('Old Password', validators=[DataRequired()])
+    new_pw = PasswordField('New Password', validators=[DataRequired()])
+    new_pw_again = PasswordField('New Password Again', validators=[
+        DataRequired(),
+        EqualTo('new_pw', message='Passwords do not match!')
+    ])
+    submit = SubmitField('Change Password')

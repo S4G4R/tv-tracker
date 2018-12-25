@@ -1,6 +1,6 @@
 from flask import render_template, redirect, Blueprint, flash, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, AddEpisodes, UpdateSeason, ChangeStatus, ChangeRating
+from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, AddEpisodes, UpdateSeason, ChangeStatus, ChangeRating, PasswordChangeForm
 from app.models import User, Show, Movie
 from app.search import search_movie, search_tv, search_by_id
 from flask_login import login_user, logout_user, login_required, current_user
@@ -245,3 +245,31 @@ def movies():
         return redirect('/movies')
 
     return render_template('movies.html', movies=movies, changestatus=changestatus, changerating=changerating)
+
+@app_routing.route('/changepassword', methods=['GET','POST'])
+@login_required
+def changepassword():
+
+    form = PasswordChangeForm()
+
+    if form.validate_on_submit():
+
+        old_pw = form.old_pw.data
+        new_pw = form.new_pw.data
+
+        curr_pw_hash = db.session.query(User).filter_by(id=current_user.id).first().pw_hash
+
+        if not check_password_hash(curr_pw_hash, old_pw):
+            flash('Wrong password! Please try again.','error')
+            return redirect('/changepassword')
+
+        user = db.session.query(User).filter_by(id=current_user.id).first()
+
+        user.pw_hash = generate_password_hash(new_pw)
+
+        db.session.commit()
+
+        flash('Changed successfully!', 'success')
+        return redirect('/myaccount')
+
+    return render_template('change_password.html', form=form)
