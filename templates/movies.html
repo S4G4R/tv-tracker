@@ -26,6 +26,7 @@ My Movies
                 <th class="text-center" scope="col">Status</th>
                 <th class="text-center" scope="col">Update Status</th>
                 <th class="text-center" scope="col">Rating (0 - 100)</th>
+                <th class="text-center" scope="col">Update Movie</th>
                 <th class="text-center" scope="col">Remove Movie</th>
             </tr>
         </thead>
@@ -34,22 +35,13 @@ My Movies
             <tr>
                 <td>{{ movie.movie_name }}</td>
                 <td>{{ movie.status }}</td>
-                <td>
                     <form role="form" method="post">
-                        {{ changestatus.csrf_token }}
-                        {{ changestatus.movie_id(value=movie.movie_id) }}
-                        {{ changestatus.status(value=movie.status, style="text-align:center;")  }}
-                        {{ changestatus.submit1(class_="btn btn-primary btn-sm") }}
+                        {{ updatemovie.csrf_token }}
+                        {{ updatemovie.movie_id(value=movie.movie_id) }}
+                        <td>{{ updatemovie.status(value=movie.status, style="text-align:center;")  }}</td>
+                        <td>{{ updatemovie.rating(value=movie.rating, style="text-align:center;")  }}</td>
+                        <td>{{ updatemovie.submit(class_="btn btn-primary btn-sm") }}</td>
                     </form>
-                </td>
-                <td>
-                    <form role="form" method="post">
-                        {{ changerating.csrf_token }}
-                        {{ changerating.movie_id(value=movie.movie_id) }}
-                        {{ changerating.rating(value=movie.rating, style="text-align:center;")  }}
-                        {{ changerating.submit2(class_="btn btn-primary btn-sm") }}
-                    </form>
-                </td>
                 <td>
                     <form role="form" action="/remove" method="post">
                         {{ removal.id(value=movie.movie_id) }}
@@ -60,9 +52,9 @@ My Movies
             </tr>
             {% endfor %}
         </tbody>
-        {% if changerating.errors %}
+        {% if updatemovie.errors %}
         <ul class=errors>
-            {% for error in changerating.rating.errors %}
+            {% for error in updatemovie.rating.errors %}
             <br>
             <li><b>{{ error }}</b></li>
             {% endfor %}
