@@ -25,6 +25,7 @@ My TV-Shows
                 <th class="text-center" scope="col">Show Name</th>
                 <th class="text-center" scope="col">Current Season</th>
                 <th class="text-center" scope="col">Episode Number</th>
+                <th class="text-center" scope="col">Update Show</th>
                 <th class="text-center" scope="col">Remove Show</th>
             </tr>
         </thead>
@@ -32,22 +33,13 @@ My TV-Shows
             {% for show in shows %}
             <tr>
                 <td>{{ show.show_name }}</td>
-                <td>
-                    <form role="form" method="post">
-                        {{ seasonform.csrf_token }}
-                        {{ seasonform.show_id(value=show.show_id) }}
-                        {{ seasonform.season(value=show.curr_season, style="text-align:center;") }}
-                        {{ seasonform.submit1(class_="btn btn-primary btn-sm") }}
-                    </form>
-                </td>
-                <td>
-                    <form role="form" method="post">
-                        {{ episodeform.csrf_token }}
-                        {{ episodeform.show_id(value=show.show_id) }}
-                        {{ episodeform.eps_watched(value=show.eps_watched, style="text-align:center;")  }}
-                        {{ episodeform.submit2(class_="btn btn-primary btn-sm") }}
-                    </form>
-                </td>
+                <form role="form" action="/shows" method="post">
+                    {{ updateshow.csrf_token }}
+                    {{ updateshow.show_id(value=show.show_id) }}
+                    <td>{{ updateshow.season(value=show.curr_season, style="text-align:center;") }}</td>
+                    <td>{{ updateshow.eps_watched(value=show.eps_watched, style="text-align:center;")  }}</td>
+                    <td>{{ updateshow.submit(class_="btn btn-primary btn-sm") }}</td>
+                </form>
                 <td>
                     <form role="form" action="/remove" method="post">
                         {{ removal.id(value=show.show_id) }}

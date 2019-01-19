@@ -28,15 +28,11 @@ class QuickAddForm(FlaskForm):
     type = HiddenField('', validators=[DataRequired()])
     submit = SubmitField('+ Quick Add')
 
-class UpdateSeason(FlaskForm):
+class UpdateShow(FlaskForm):
     show_id = HiddenField('', validators=[DataRequired()])
     season = IntegerField('Episodes')
-    submit1 = SubmitField('⟳')
-
-class AddEpisodes(FlaskForm):
-    show_id = HiddenField('', validators=[DataRequired()])
     eps_watched = IntegerField('Episodes')
-    submit2 = SubmitField('⟳')
+    submit = SubmitField('⟳')
 
 class ChangeStatus(FlaskForm):
     movie_id = HiddenField('', validators=[DataRequired()])

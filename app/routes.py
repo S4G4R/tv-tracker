@@ -1,6 +1,6 @@
 from flask import render_template, redirect, Blueprint, flash, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, AddEpisodes, UpdateSeason, ChangeStatus, ChangeRating, PasswordChangeForm, RemovalForm
+from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, ChangeStatus, ChangeRating, PasswordChangeForm, RemovalForm, UpdateShow
 from app.models import User, Show, Movie
 from app.search import search_movie, search_tv, search_by_id
 from flask_login import login_user, logout_user, login_required, current_user
@@ -178,29 +178,16 @@ def shows():
 
     shows = Show.query.filter_by(user_id=current_user.id).all()
 
-    seasonform = UpdateSeason()
-    episodeform = AddEpisodes()
+    updateshow = UpdateShow()
     removal = RemovalForm()
 
-    if seasonform.submit1.data and seasonform.validate_on_submit():
-        id = seasonform.show_id.data
-        season = seasonform.season.data
+    if updateshow.validate_on_submit():
+        id = updateshow.show_id.data
+        season = updateshow.season.data
+        eps = updateshow.eps_watched.data
 
         show = db.session.query(Show).filter_by(show_id=id).first()
-
         show.curr_season = season
-
-        db.session.commit()
-
-        flash('Updated successfully!', 'success')
-        return redirect('/shows')
-
-    if episodeform.submit2.data and episodeform.validate_on_submit():
-        id = episodeform.show_id.data
-        eps = episodeform.eps_watched.data
-
-        show = db.session.query(Show).filter_by(show_id=id).first()
-
         show.eps_watched = eps
 
         db.session.commit()
@@ -208,7 +195,7 @@ def shows():
         flash('Updated successfully!', 'success')
         return redirect('/shows')
 
-    return render_template('shows.html', shows=shows, episodeform=episodeform, seasonform=seasonform, removal=removal)
+    return render_template('shows.html', shows=shows, updateshow=updateshow, removal=removal)
 
 @app_routing.route('/movies', methods=['GET','POST'])
 @login_required
