@@ -248,6 +248,10 @@ def movies():
         status = updatemovie.status.data
         rating = updatemovie.rating.data
 
+        if rating < 0 or rating > 100:
+            flash('Please enter a rating between 0 and 100!', 'error')
+            return redirect('/movies')
+
         movie = db.session.query(Movie).filter_by(movie_id=id).first()
 
         movie.status = status
