@@ -8,92 +8,129 @@ from tv import db, login_manager
 
 app_routing = Blueprint('app_routing',__name__)
 
+@login_manager.user_loader
+def load_user(id):
+    """
+    Returns a User instance when an id is provided.
+    This function is required by the flask_login package.
+    """
+    return User.query.get(id)
+
 @app_routing.route('/')
 @app_routing.route('/index')
 def index():
+    """
+    Goes to homepage.
+    """
     return render_template('index.html')
-
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(id)
 
 @app_routing.route('/login', methods=['GET','POST'])
 def login():
-
+    """
+    Logs a user in.
+    """
+    # If the user is currently authenticated already, just redirect to homepage.
     if current_user.is_authenticated:
         return redirect('/index')
 
+    # Generate the login form
     form = LoginForm()
 
+    # If the user has submitted a POST request, it will be validated below.
     if form.validate_on_submit():
 
+        # Store the inputted username
         username = form.username.data
 
-        username_present = User.query.filter_by(username=username).first()
+        # Check if the user exists
+        user = User.query.filter_by(username=username).first()
 
-        if not username_present:
+        # If the user does not exist, show error and redirect to login page.
+        if not user:
             flash('Incorrect password or username!', 'error')
             return redirect('/login')
 
+        # Store password and retrive the password hash stored in the database.
         password = form.password.data
-        pw_hash = username_present.pw_hash
+        pw_hash = user.pw_hash
 
+        # If the two are not equal, show error and redirect to login page.
         if not check_password_hash(pw_hash, password):
             flash('Incorrect password or username!', 'error')
             return redirect('/login')
 
-        username_present.authenticated = True
-        db.session.add(username_present)
+        # Authenticate the user
+        user.authenticated = True
+        db.session.add(user)
         db.session.commit()
 
-        login_user(username_present, remember=True)
+        # Actually login the user through flask_login
+        login_user(user, remember=True)
 
+        # Show success message and redirect back to homepage.
         flash('Logged in successfully!', 'success')
         return redirect('/index')
 
+    # If the request was GET, render the login page with the login form.
     return render_template('login.html', form=form)
 
 @app_routing.route('/logout', methods=['GET'])
 @login_required
 def logout():
+    """
+    Logs a user out.
+    """
 
+    # De-authenticate the current user.
     user = current_user
     user.authenticated = False
     db.session.add(user)
     db.session.commit()
 
+    # Log user out.
     logout_user()
 
+    # Show success message and redirect back to homepage.
     flash('Logged out successfully!', 'success')
-
     return redirect('/index')
 
 @app_routing.route('/register', methods=['GET','POST'])
 def register():
-
+    """
+    Registers a new user.
+    """
+    # If the user is currently authenticated already, just redirect to homepage.
     if current_user.is_authenticated:
         return redirect('/index')
 
+    # Generate the form
     form = RegisterForm()
 
+    # If the user has submitted a POST request, it will be validated below.
     if form.validate_on_submit():
 
+        # Store the username and generate a password hash from the provided password
         username = form.username.data
         pw_hash = generate_password_hash(form.password.data)
 
-        username_present = User.query.filter_by(username=username).first()
+        # Check if the username is already registered
+        user = User.query.filter_by(username=username).first()
 
-        if username_present:
+        # If so, show error and redirect to register page
+        if user:
             flash('Username already registered!', 'error')
             return redirect('/register')
 
+        # Create a new user, and add to the database
         new_user = User(username=username, pw_hash=pw_hash)
         db.session.add(new_user)
         db.session.commit()
 
+        # Show success message and redirect to homepage
         flash('Registered successfully!', 'success')
         return redirect('/index')
 
+    # If the request was GET, render the register page with the registration form.
     return render_template('register.html', form=form)
 
 @app_routing.route('/myaccount', methods=['GET'])
