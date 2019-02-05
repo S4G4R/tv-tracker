@@ -37,7 +37,7 @@ class UpdateShow(FlaskForm):
 class UpdateMovie(FlaskForm):
     movie_id = HiddenField('', validators=[DataRequired()])
     status = SelectField('Change Status', choices=[('Watched', 'Watched'), ('Not Watched', 'Not Watched')])
-    rating = IntegerField('Rating', validators=[NumberRange(min=0,max=100,message='Enter rating between 0 and 100!')])
+    rating = IntegerField('Rating')
     submit = SubmitField('⟳')
 
 class PasswordChangeForm(FlaskForm):

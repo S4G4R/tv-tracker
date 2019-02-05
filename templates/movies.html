@@ -52,14 +52,6 @@ My Movies
             </tr>
             {% endfor %}
         </tbody>
-        {% if updatemovie.errors %}
-        <ul class=errors>
-            {% for error in updatemovie.rating.errors %}
-            <br>
-            <li><b>{{ error }}</b></li>
-            {% endfor %}
-        </ul>
-        {% endif %}
     </table>
 </div>
 {% else %}
