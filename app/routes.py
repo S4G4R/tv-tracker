@@ -136,6 +136,9 @@ def register():
 @app_routing.route('/myaccount', methods=['GET'])
 @login_required
 def myaccount():
+    """
+    Displays user information.
+    """
 
     username = current_user.username
 
@@ -144,33 +147,47 @@ def myaccount():
 @app_routing.route('/search', methods=['GET','POST'])
 @login_required
 def search():
-
+    """
+    Handles searching for tv shows or movies.
+    """
+    # Generate the form
     form = SearchForm()
 
+    # If the user has submitted a POST request, it will be validated below.
     if form.validate_on_submit():
 
+        # Retrive show/movie title and whether it actually is a tv show or movie
         form_title = form.title.data
         form_type = form.type.data
 
+        # Perform necessary searches
         if form_type == 'tv':
             results = search_tv(form_title)
         else :
             results = search_movie(form_title)
 
+        # Display results
         form = QuickAddForm()
         return render_template('results.html',results=results,type=form_type,form=form)
 
+    # If the request was GET, render the register page with the search form.
     return render_template('search.html', form=form)
 
 @app_routing.route('/quickadd', methods=['POST'])
 @login_required
 def quickadd():
+    """
+    Functionality to quickly add a tv show or movie by clicking a button.
+    """
 
+    # Retrive show/movie title and whether it actually is a tv show or movie
     id = request.form.get('id')
     type = request.form.get('type')
 
+    # Search for the show/movie and store the result
     result = search_by_id(id, type)
 
+    # Create and add the show/movie
     if type == 'tv':
         show_present = Show.query.filter_by(show_id=id).first()
 
@@ -207,22 +224,29 @@ def quickadd():
 
         flash('Added movie successfully!', 'success')
 
+    # Return home
     return redirect('/index')
 
 @app_routing.route('/shows', methods=['GET','POST'])
 @login_required
 def shows():
+    """
+    Display page with all the users tv shows.
+    """
 
     shows = Show.query.filter_by(user_id=current_user.id).all()
 
+    # Generate forms
     updateshow = UpdateShow()
     removal = RemovalForm()
 
+    # If the user has submitted a POST request, it will be validated below.
     if updateshow.validate_on_submit():
         id = updateshow.show_id.data
         season = updateshow.season.data
         eps = updateshow.eps_watched.data
 
+        # Update show information
         show = db.session.query(Show).filter_by(show_id=id).first()
         show.curr_season = season
         show.eps_watched = eps
@@ -232,28 +256,35 @@ def shows():
         flash('Updated successfully!', 'success')
         return redirect('/shows')
 
+    # If the request was GET, render the page with the tv show list.
     return render_template('shows.html', shows=shows, updateshow=updateshow, removal=removal)
 
 @app_routing.route('/movies', methods=['GET','POST'])
 @login_required
 def movies():
-
+    """
+    Display page with all the users movies.
+    """
     movies = Movie.query.filter_by(user_id=current_user.id).all()
 
+    # Generate forms
     updatemovie = UpdateMovie()
     removal = RemovalForm()
 
+    # If the user has submitted a POST request, it will be validated below.
     if updatemovie.validate_on_submit():
         id = updatemovie.movie_id.data
         status = updatemovie.status.data
         rating = updatemovie.rating.data
 
+        # Ensure rating falls between constraints
         if rating < 0 or rating > 100:
             flash('Please enter a rating between 0 and 100!', 'error')
             return redirect('/movies')
 
         movie = db.session.query(Movie).filter_by(movie_id=id).first()
 
+        # Update movie information
         movie.status = status
         movie.rating = rating
 
@@ -262,27 +293,36 @@ def movies():
         flash('Updated successfully!', 'success')
         return redirect('/movies')
 
+    # If the request was GET, render the page with the tv show list.
     return render_template('movies.html', movies=movies, updatemovie=updatemovie, removal=removal)
 
 @app_routing.route('/changepassword', methods=['GET','POST'])
 @login_required
 def changepassword():
-
+    """
+    Display page to change password.
+    """
+    # Change password
     form = PasswordChangeForm()
 
+    # If the user has submitted a POST request, it will be validated below.
     if form.validate_on_submit():
 
+        # Retrive passwords
         old_pw = form.old_pw.data
         new_pw = form.new_pw.data
 
+        # Generate hash
         curr_pw_hash = db.session.query(User).filter_by(id=current_user.id).first().pw_hash
 
+        # Ensure new password hash matches old password hash
         if not check_password_hash(curr_pw_hash, old_pw):
             flash('Wrong password! Please try again.','error')
             return redirect('/changepassword')
 
         user = db.session.query(User).filter_by(id=current_user.id).first()
 
+        # Update password
         user.pw_hash = generate_password_hash(new_pw)
 
         db.session.commit()
@@ -290,23 +330,29 @@ def changepassword():
         flash('Changed successfully!', 'success')
         return redirect('/myaccount')
 
+    # If the request was GET, render the password change form.
     return render_template('change_password.html', form=form)
 
 @app_routing.route('/remove', methods=['POST'])
 @login_required
 def remove():
-
+    """
+    Remove a tv-show or movie.
+    """
     id = request.form.get('id')
     type = request.form.get('type')
 
+    # Retrive the respective tv show/movie from database
     if type == 'tv':
         result = db.session.query(Show).filter_by(show_id=id).first()
     else :
         result = db.session.query(Movie).filter_by(movie_id=id).first()
 
+    # Delete the show/movie
     db.session.delete(result)
     db.session.commit()
 
+    # Redirect
     if type == 'tv':
         flash('Show deleted successfully!', 'success')
         return redirect('/shows')
