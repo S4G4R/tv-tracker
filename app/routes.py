@@ -180,7 +180,7 @@ def quickadd():
     Functionality to quickly add a tv show or movie by clicking a button.
     """
 
-    # Retrive show/movie title and whether it actually is a tv show or movie
+    # Retrieve show/movie title and whether it actually is a tv show or movie
     id = request.form.get('id')
     type = request.form.get('type')
 
