@@ -60,7 +60,10 @@ def login():
             return redirect('/login')
 
         # Actually login the user through flask_login
-        login_user(user, remember=True)
+        if form.remember.data == True:
+            login_user(user, remember=True)
+        else:
+            login_user(user)
 
         # Show success message and redirect back to homepage.
         flash('Logged in successfully!', 'success')

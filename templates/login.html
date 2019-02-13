@@ -22,6 +22,10 @@ Login
                             {{ form.password.label }}
                             {{ form.password(class_="form-control", placeholder="Enter password", type="password") }}
                         </div>
+                        <div class="form-group">
+                            {{ form.remember.label }}
+                            {{ form.remember(style="margin-left:5px") }}
+                        </div>
                         {{ form.submit(class_="btn btn-default") }}
                     </form>
                 </div>
