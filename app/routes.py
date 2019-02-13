@@ -59,11 +59,6 @@ def login():
             flash('Incorrect password or username!', 'error')
             return redirect('/login')
 
-        # Authenticate the user
-        user.authenticated = True
-        db.session.add(user)
-        db.session.commit()
-
         # Actually login the user through flask_login
         login_user(user, remember=True)
 
@@ -80,12 +75,6 @@ def logout():
     """
     Logs a user out.
     """
-
-    # De-authenticate the current user.
-    user = current_user
-    user.authenticated = False
-    db.session.add(user)
-    db.session.commit()
 
     # Log user out.
     logout_user()
