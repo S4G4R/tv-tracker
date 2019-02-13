@@ -50,7 +50,7 @@ def login():
             flash('Incorrect password or username!', 'error')
             return redirect('/login')
 
-        # Store password and retrive the password hash stored in the database.
+        # Store password and retrieve the password hash stored in the database.
         password = form.password.data
         pw_hash = user.pw_hash
 
@@ -145,7 +145,7 @@ def search():
     # If the user has submitted a POST request, it will be validated below.
     if form.validate_on_submit():
 
-        # Retrive show/movie title and whether it actually is a tv show or movie
+        # Retrieve show/movie title and whether it actually is a tv show or movie
         form_title = form.title.data
         form_type = form.type.data
 
@@ -297,7 +297,7 @@ def changepassword():
     # If the user has submitted a POST request, it will be validated below.
     if form.validate_on_submit():
 
-        # Retrive passwords
+        # Retrieve passwords
         old_pw = form.old_pw.data
         new_pw = form.new_pw.data
 
@@ -331,7 +331,7 @@ def remove():
     id = request.form.get('id')
     type = request.form.get('type')
 
-    # Retrive the respective tv show/movie from database
+    # Retrieve the respective tv show/movie from database
     if type == 'tv':
         result = db.session.query(Show).filter_by(show_id=id).first()
     else :
