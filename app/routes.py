@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, RegisterForm, SearchForm, QuickAddForm, PasswordChangeForm, RemovalForm, UpdateShow, UpdateMovie
 from app.models import User, Show, Movie
 from app.search import search_movie, search_tv, search_by_id
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, login_required, current_user, fresh_login_required
 from tv import db, login_manager
 
 app_routing = Blueprint('app_routing',__name__)
@@ -289,7 +289,7 @@ def movies():
     return render_template('movies.html', movies=movies, updatemovie=updatemovie, removal=removal)
 
 @app_routing.route('/changepassword', methods=['GET','POST'])
-@login_required
+@fresh_login_required
 def changepassword():
     """
     Display page to change password.
