@@ -5,7 +5,6 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False)
     pw_hash = db.Column(db.String(80), nullable=False)
-    authenticated = db.Column(db.Boolean, default=False)
     movies = db.relationship('Movie', backref='user')
     shows = db.relationship('Show', backref='user')
 
