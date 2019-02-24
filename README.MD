@@ -57,7 +57,7 @@ os.urandom(16)
 
 You should get a piece of string of jumbled up characters. Copy it, and save it alongside your API Key in the notepad.
 
-Now, open up the [config.py](config.py) file which is in the root of your project, with a text editor.
+Now, open up the [.env](.env) file which is in the root of your project, with a text editor.
 
 Here, there are two obvious modifications that we need to make. Replace the following :
 
@@ -77,7 +77,7 @@ To stop, press \'CTRL + C\' and then, type `exit`
 
 ## Uninstallation Instructions
 
-Uninstalling is very simple. 
+Uninstalling is very simple.
 
 Simply head to the root of the project with your shell, and type in :
 
