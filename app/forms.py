@@ -11,9 +11,7 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    repeatedPassword = PasswordField('Confirm Password', validators=[
-                    DataRequired(),
-                    EqualTo('password', message='Please enter the correct password!')])
+    repeatedPassword = PasswordField('Confirm Password', validators=[DataRequired()])
     submit = SubmitField('Register')
 
 class SearchForm(FlaskForm):

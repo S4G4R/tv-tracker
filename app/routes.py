@@ -103,6 +103,8 @@ def register():
 
         # Store the username and generate a password hash from the provided password
         username = form.username.data
+        pw = form.password.data
+        pw_repeated = form.repeatedPassword.data
         pw_hash = generate_password_hash(form.password.data)
 
         # Check if the username is already registered
@@ -111,6 +113,11 @@ def register():
         # If so, show error and redirect to register page
         if user:
             flash('Username already registered!', 'error')
+            return redirect('/register')
+
+        # Check whether passwords match
+        if pw != pw_repeated:
+            flash('Please enter both passwords correctly.', 'error')
             return redirect('/register')
 
         # Create a new user, and add to the database
