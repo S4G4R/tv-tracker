@@ -42,10 +42,7 @@ class UpdateMovie(FlaskForm):
 class PasswordChangeForm(FlaskForm):
     old_pw = PasswordField('Old Password', validators=[DataRequired()])
     new_pw = PasswordField('New Password', validators=[DataRequired()])
-    new_pw_again = PasswordField('New Password Again', validators=[
-        DataRequired(),
-        EqualTo('new_pw', message='Passwords do not match!')
-    ])
+    new_pw_again = PasswordField('New Password Again', validators=[DataRequired()])
     submit = SubmitField('Change Password')
 
 class RemovalForm(FlaskForm):
