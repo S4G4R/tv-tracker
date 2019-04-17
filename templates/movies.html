@@ -5,21 +5,17 @@ My Movies
 {% endblock %}
 
 {% block body %}
-<div class="inner-wrapper">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4 col-sm-offset-4">
-                <h2 class="text-center fixed-top">Your Movies</h2>
-                <br>
-            </div>
-        </div>
+<div class="row justify-content-center">
+    <div class="col-5">
+        <h2 class="text-center">Your Movies</h2>
+        <br>
     </div>
 </div>
 
 {% if movies %}
 <div class="inner-wrapper scrollable well">
 
-    <table class="table text-center">
+    <table class="table text-center text-light">
         <thead>
             <tr>
                 <th class="text-center" scope="col">Movie Title</th>
@@ -55,8 +51,10 @@ My Movies
     </table>
 </div>
 {% else %}
-<div class="alert alert-danger col-md-4 col-md-offset-4 text-center" align="center" role="alert">
-    <strong>No movies to display!</strong>
+<div class="row justify-content-center">
+    <div class="col-4 alert alert-danger text-center" align="center" role="alert">
+        <strong>No movies to display!</strong>
+    </div>
 </div>
 {% endif %}
 {% endblock %}
