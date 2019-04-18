@@ -188,7 +188,7 @@ def quickadd():
 
     # Create and add the show/movie
     if type == 'tv':
-        show_present = Show.query.filter_by(show_id=id).first()
+        show_present = Show.query.filter_by(show_id=id, user_id=current_user.id).first()
 
         if show_present:
             flash('Show already in your list!', 'error')
@@ -206,7 +206,7 @@ def quickadd():
         flash('Added show successfully!', 'success')
 
     else :
-        movie_present = Movie.query.filter_by(movie_id=id).first()
+        movie_present = Movie.query.filter_by(movie_id=id, user_id=current_user.id).first()
 
         if movie_present:
             flash('Movie already in your list!', 'error')
