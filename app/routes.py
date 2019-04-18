@@ -312,10 +312,10 @@ def changepassword():
         new_pw = form.new_pw.data
         new_pw_again = form.new_pw_again.data
 
-        # Generate hash
+        # Fetch hash
         curr_pw_hash = db.session.query(User).filter_by(id=current_user.id).first().pw_hash
 
-        # Ensure new password hash matches old password hash
+        # Ensure entered password hash matches old password hash
         if not check_password_hash(curr_pw_hash, old_pw):
             flash('Wrong password! Please try again.','error')
             return redirect('/changepassword')
